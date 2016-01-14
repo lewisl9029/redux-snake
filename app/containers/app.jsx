@@ -23,8 +23,9 @@ class App extends Component {
       dispatch,
       players,
       playerId,
-      time,
-      grid
+      timer,
+      grid,
+      block
     } = this.props;
     return (
       <div className="container" style={({
@@ -38,16 +39,20 @@ class App extends Component {
         <Controls
           players={players} 
           playerId={playerId} 
-          time={time} 
-          joinGame={players => dispatch(actions.joinGame(players))}
+          timer={timer}
+          block={block}
+          grid={grid} 
+          joinGame={(players, grid, block, timer) => dispatch(actions.joinGame(players, grid, block, timer))}
+          startTimer={() => dispatch(actions.startTimer())}
           startGame={(playerId, direction) => dispatch(actions.startGame(playerId, direction))}
+          changeDirection={(playerId, direction) => dispatch(actions.changeDirection(playerId, direction))}
         >
         </Controls>
         <GameBoard
           grid={grid} 
           players={players} 
           playerId={playerId} 
-          time={time} 
+          timer={timer} 
         >
         </GameBoard>
       </div>
@@ -59,5 +64,6 @@ export default connect(state => ({
   grid: state.get('grid'),
   players: state.get('players'),
   playerId: state.get('playerId'),
-  time: state.get('time')
+  timer: state.get('timer'),
+  block: state.get('block')
 }))(App);

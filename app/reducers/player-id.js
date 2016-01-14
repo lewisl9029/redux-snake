@@ -7,7 +7,7 @@ let initialState = null;
 let playerId = (state = initialState, action) => {
 	switch (action.type) {
     case JOIN_GAME: 
-      return action.player.get('id');
+      return action.playerId;
 		default:
 			return state;
 	}

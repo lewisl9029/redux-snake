@@ -3,12 +3,14 @@ import { Map } from 'immutable';
 
 import players from './players';
 import playerId from './player-id';
-import time from './time';
+import timer from './timer';
 import grid from './grid';
+import block from './block';
 
 export default combineReducers({
   playerId,
   players,
   grid,
-  time
+  timer,
+  block
 });

@@ -3,7 +3,9 @@ import { Range } from 'immutable';
 
 class GameBoard extends Component {
   render() {
-    let { grid, players, playerId, time } = this.props;
+    let { grid, players, playerId, timer } = this.props;
+    
+    let currentGrid = grid.get(timer.get('time'));
     
     let renderCellContent = cell => {
       switch (cell.getIn(['content', 'type'])) {
@@ -12,7 +14,7 @@ class GameBoard extends Component {
             <div style={({
               width: '50%',
               height: '50%',
-              backgroundColor: '#555'
+              backgroundColor: cell.getIn(['content', 'isHead']) ? '#555' : '#888'
             })}></div>
           );
         case 'block':
@@ -48,13 +50,13 @@ class GameBoard extends Component {
           border: '1px solid #bbb'
         })}>
           { 
-            grid.valueSeq().map((row, rowId) => (
+            currentGrid.valueSeq().map((row, rowId) => (
               <div 
                 key={rowId}
                 style={({
-                  height: `${ 100 / grid.size }%`,
+                  height: `${ 100 / currentGrid.size }%`,
                   boxSizing: 'border-box',
-                  borderBottom: rowId !== grid.size - 1 ? 
+                  borderBottom: rowId !== currentGrid.size - 1 ? 
                     '1px solid #bbb' : 'none'
                 })}
               >
