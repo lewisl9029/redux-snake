@@ -18,7 +18,10 @@ import GameBoard from '../components/game-board';
 
 class App extends Component {
   render() {
-    const { dispatch } = this.props;
+    const { 
+      dispatch,
+      grid
+    } = this.props;
     return (
       <div className="container" style={({
         marginTop: '3em',
@@ -29,11 +32,16 @@ class App extends Component {
         })}>
           Snake Swarm
         </h1>
-        <GameBoard></GameBoard>
+        <GameBoard
+          grid={grid} 
+        >
+        </GameBoard>
       </div>
     );
   }
 }
 
 export default connect(state => ({ 
+  grid: state.get('grid'),
+  players: state.get('players')
 }))(App);

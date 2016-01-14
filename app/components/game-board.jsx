@@ -3,6 +3,8 @@ import { Range } from 'immutable';
 
 class GameBoard extends Component {
   render() {
+    let { grid } = this.props;
+    
     return (
       <div style={({
         display: 'flex',
@@ -15,21 +17,31 @@ class GameBoard extends Component {
           border: '1px solid #bbb'
         })}>
           { 
-            Range(0, 8).map(rowId => (
-              <div style={({
-                height: '12.5%',
-                boxSizing: 'border-box',
-                borderBottom: rowId !== 7 ? '1px solid #bbb' : 'none'
-              })}>
+            grid.valueSeq().map((row, rowId) => (
+              <div 
+                key={rowId}
+                style={({
+                  height: `${ 100 / grid.size }%`,
+                  boxSizing: 'border-box',
+                  borderBottom: rowId !== grid.size - 1 ? 
+                    '1px solid #bbb' : 'none'
+                })}
+              >
                 {
-                  Range(0, 8).map(columnId => (
-                    <div style={({
-                      display: 'inline-block',
-                      boxSizing: 'border-box',
-                      height: '100%',
-                      width: '12.5%',
-                      borderRight: columnId !== 7 ? '1px solid #bbb' : 'none'
-                    })}>
+                  row.valueSeq().map((cell, columnId) => (
+                    <div 
+                      key={columnId}
+                      style={({
+                        display: 'inline-block',
+                        boxSizing: 'border-box',
+                        height: '100%',
+                        width: `${ 100 / row.size }%`,
+                        borderRight: columnId !== row.size - 1 ?
+                          '1px solid #bbb' : 'none'
+                      })}
+                    >
+                      {cell.get('coordinates').get('x')}, 
+                      {cell.get('coordinates').get('y')}
                     </div>
                   ))
                 }
