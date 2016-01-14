@@ -129,6 +129,28 @@ let fillGrid = (players, timer, block, grid) => {
   return newGridWithBlock;
 };
 
+let isOutOfBounds = player => {
+  let headCoordinates = player.get('coordinates').valueSeq().last();
+  return headCoordinates.get('rowId') < 0 || headCoordinates.get('rowId') > 7 ||
+    headCoordinates.get('columnId') < 0 || headCoordinates.get('columnId') > 7;
+};
+
+let hasCollided = player => {
+  // TODO: update collision logic for multiplayer
+  let playerCoordinates = getPlayerCoordinates(player);
+  let playerHeadCoordinates = playerCoordinates.first();
+  let playerBodyCoordinates = playerCoordinates.rest();
+  return playerBodyCoordinates.includes(playerHeadCoordinates);
+};
+
+let eatenBlock = (player, block) => {
+  let playerHeadCoordinates = player.get('coordinates').valueSeq().last();
+  let blockCoordinates = block.get('coordinates').valueSeq().last();
+  return playerHeadCoordinates.equals(blockCoordinates);
+};
+
+export const STOP_GAME = 'STOP_GAME';
+
 export const TIMER_START = 'TIMER_START';
 export const TIMER_TICK = 'TIMER_TICK';
 export const TIMER_STOP = 'TIMER_STOP';
@@ -145,16 +167,53 @@ export function startTimer() {
         let updatedTimer = timer.update('time', time => time + 1);
         let time = updatedTimer.get('time');
         let movedPlayers = players.map(player => movePlayer(player, updatedTimer));
-        // TODO: game-over logic needs to be updated for multiplayer
         let newBlock = block.setIn(['coordinates', time], block.getIn(['coordinates', time - 1]));
         let filledGrid = fillGrid(movedPlayers, updatedTimer, newBlock, grid);
         let newGrid = grid.set(time, filledGrid);
+        
+        // TODO: game-over logic needs to be updated for multiplayer
+        if (movedPlayers.some(isOutOfBounds)) {
+          clearInterval(intervalId);
+          return dispatch({ type: TIMER_STOP });
+        }
+        
+        if (movedPlayers.some(hasCollided)) {
+          clearInterval(intervalId);
+          return dispatch({ type: TIMER_STOP });
+        }
+        
+        let growingPlayers = movedPlayers.filter(player => eatenBlock(player, newBlock));
+        
+        if (growingPlayers.size === 0) {
+          return dispatch({ 
+            type: TIMER_TICK,
+            block: newBlock, 
+            players: movedPlayers, 
+            timer: updatedTimer, 
+            grid: newGrid
+          });
+        }
+        
+        let grownPlayers = movedPlayers.merge(growingPlayers
+          .map(player => player.update('length', length => length + 1)));
+        
+        let existingPlayerCoordinates = grownPlayers
+          .map(getPlayerCoordinates)
+          .flatten(1);
+        
+        let newBlockCoordinates = getNewCoordinates(existingPlayerCoordinates);
+        
+        let replacedBlock = newBlock.setIn(['coordinates', time], newBlockCoordinates);
+        
+        let refilledGrid = fillGrid(grownPlayers, updatedTimer, replacedBlock, grid);
+        let newRefilledGrid = grid.set(time, refilledGrid);
+        
         return dispatch({ 
           type: TIMER_TICK,
-          block: newBlock, 
-          players: movedPlayers, 
+          block: replacedBlock, 
+          players: grownPlayers, 
           timer: updatedTimer, 
-          grid: newGrid
+          grid: newRefilledGrid
         });
       }
       
