@@ -1,9 +1,5 @@
 @import url(https://fonts.googleapis.com/css?family=Raleway:400,300,600);
 
-button:disabled {
-	opacity: 0.5;
-}
-
 #ribbon-container {
   pointer-events: none;
   position: absolute;
@@ -28,4 +24,3 @@ button:disabled {
   padding: 0 40px;
   background-color: white;
 }
-
