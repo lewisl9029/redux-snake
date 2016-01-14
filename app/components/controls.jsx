@@ -29,6 +29,43 @@ class Controls extends Component {
         </div>
       ) :
       (
+        <div>
+        <div className="row">
+          <input type="text" onKeyUp={event => {
+              switch (event.key) {
+                case 'ArrowUp':
+                  if (timer.get('time') === 0) {
+                    startGame(playerId, 'up'); 
+                    startTimer();
+                    return;
+                  }
+                  return changeDirection(playerId, 'up');
+                case 'ArrowDown':
+                  if (timer.get('time') === 0) {
+                    startGame(playerId, 'down'); 
+                    startTimer();
+                    return;
+                  }
+                  return changeDirection(playerId, 'down');
+                case 'ArrowLeft':
+                  if (timer.get('time') === 0) {
+                    startGame(playerId, 'left'); 
+                    startTimer();
+                    return;
+                  }
+                  return changeDirection(playerId, 'left');
+                case 'ArrowRight':
+                  if (timer.get('time') === 0) {
+                    startGame(playerId, 'right'); 
+                    startTimer();
+                    return;
+                  }
+                  return changeDirection(playerId, 'right');
+                default:
+                  return;
+              }
+            }} />
+        </div>
         <div className="row">
           <div className="three columns">
             <button 
@@ -130,6 +167,8 @@ class Controls extends Component {
               Right
             </button>
           </div>
+        </div>
+        
         </div>
       );
   }

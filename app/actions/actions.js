@@ -226,7 +226,7 @@ export function startTimer() {
       
       clearInterval(intervalId);
       dispatch({ type: TIMER_STOP });
-    }, 1000);
+    }, 200);
     dispatch({ type: TIMER_START });
   };
 }
