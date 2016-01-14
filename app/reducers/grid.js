@@ -1,5 +1,9 @@
 import { Range, OrderedMap, fromJS } from 'immutable';
 
+import { 
+	JOIN_GAME
+} from '../actions/actions';
+
 let initialState = OrderedMap(
   Range(0, 8).map(rowId => [
     rowId,
@@ -7,8 +11,8 @@ let initialState = OrderedMap(
       Range(0, 8).map(columnId => [
         columnId,
         fromJS({ 
-          coordinates: { x: columnId, y: rowId },
-          content: null 
+          coordinates: { rowId, columnId },
+          content: null
         })
       ])
     )
@@ -17,6 +21,33 @@ let initialState = OrderedMap(
 
 let grid = (state = initialState, action) => {
 	switch (action.type) {
+    case JOIN_GAME:
+      let gridWithBlocks = action.blockCoordinates
+        .reduce((newGrid, blockCoordinate) => newGrid.setIn([
+            blockCoordinate.get('rowId'), 
+            blockCoordinate.get('columnId'),
+            'content'
+          ], 
+          fromJS({ 
+            type: 'block',
+            symbol: 'x'
+          })), 
+          state
+        );
+      
+      let gridWithPlayer = gridWithBlocks.setIn([
+          action.player.getIn(['coordinates', 'rowId']), 
+          action.player.getIn(['coordinates', 'columnId']),
+          'content'
+        ], 
+        fromJS({
+          type: 'player',
+          id: action.player.get('id'),
+          symbol: 'o'
+        })
+      );
+      
+      return gridWithPlayer;
 		default:
 			return state;
 	}

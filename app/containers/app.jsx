@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import * as actions from '../actions/actions';
 import GameBoard from '../components/game-board';
+import Controls from '../components/controls';
 // using stateless components isn't supported with hot reload yet
 // let App = ({ 
 // 	dispatch
@@ -20,6 +21,9 @@ class App extends Component {
   render() {
     const { 
       dispatch,
+      players,
+      playerId,
+      time,
       grid
     } = this.props;
     return (
@@ -27,13 +31,23 @@ class App extends Component {
         marginTop: '3em',
       })}>
         <h1 style={({
-          marginBottom: '1em',
           textAlign: 'center'
         })}>
           Snake Swarm
         </h1>
+        <Controls
+          players={players} 
+          playerId={playerId} 
+          time={time} 
+          joinGame={players => dispatch(actions.joinGame(players))}
+          startGame={(playerId, direction) => dispatch(actions.startGame(playerId, direction))}
+        >
+        </Controls>
         <GameBoard
           grid={grid} 
+          players={players} 
+          playerId={playerId} 
+          time={time} 
         >
         </GameBoard>
       </div>
@@ -43,5 +57,7 @@ class App extends Component {
 
 export default connect(state => ({ 
   grid: state.get('grid'),
-  players: state.get('players')
+  players: state.get('players'),
+  playerId: state.get('playerId'),
+  time: state.get('time')
 }))(App);
