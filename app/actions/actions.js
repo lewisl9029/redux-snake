@@ -1,14 +1,14 @@
 import { fromJS, Range, OrderedMap } from 'immutable';
 
-let getNewCoordinates = existingCoordinates => {
-  // min inclusive, max exclusive
-  let getRandomInt = (min, max) => {
-    return Math.floor(Math.random() * (max - min)) + min;
-  };
-  
+// min inclusive, max exclusive
+let getRandomInt = (min, max) => {
+  return Math.floor(Math.random() * (max - min)) + min;
+};
+
+let getNewCoordinates = (existingCoordinates, getInt = getRandomInt) => {  
   let newCoordinates = fromJS({
-    rowId: getRandomInt(0, 8),
-    columnId: getRandomInt(0, 8)
+    rowId: getInt(0, 8),
+    columnId: getInt(0, 8)
   });
   
   if (!existingCoordinates.includes(newCoordinates)) {
@@ -17,12 +17,99 @@ let getNewCoordinates = existingCoordinates => {
   
   return getNewCoordinates(existingCoordinates);
 };
+export { getNewCoordinates };
 
 let getPlayerCoordinates = player => player.get('coordinates')
   .reverse()
   .take(player.get('length'))
   .valueSeq();
 export { getPlayerCoordinates };
+
+let movePlayer = (player, timer) => {
+  let time = timer.get('time');
+  let previousCoordinates = player.getIn(['coordinates', time - 1]);
+  
+  switch (player.get('direction')) {
+    case 'up': 
+      return player.setIn(['coordinates', time], previousCoordinates
+        .update('rowId', rowIndex => rowIndex - 1));
+    case 'down': 
+      return player.setIn(['coordinates', time], previousCoordinates
+        .update('rowId', rowIndex => rowIndex + 1));
+    case 'left': 
+      return player.setIn(['coordinates', time], previousCoordinates
+        .update('columnId', columnIndex => columnIndex - 1));
+    case 'right': 
+      return player.setIn(['coordinates', time], previousCoordinates
+        .update('columnId', columnIndex => columnIndex + 1));
+    default:
+      return player;
+  }
+};
+export { movePlayer };
+
+let isOutOfBounds = player => {
+  let headCoordinates = player.get('coordinates').valueSeq().last();
+  return headCoordinates.get('rowId') < 0 || headCoordinates.get('rowId') > 7 ||
+    headCoordinates.get('columnId') < 0 || headCoordinates.get('columnId') > 7;
+};
+export { isOutOfBounds };
+
+
+let hasCollided = player => {
+  // TODO: update collision logic for multiplayer
+  let playerCoordinates = getPlayerCoordinates(player);
+  let playerHeadCoordinates = playerCoordinates.first();
+  let playerBodyCoordinates = playerCoordinates.rest();
+  return playerBodyCoordinates.includes(playerHeadCoordinates);
+};
+export { hasCollided };
+
+let eatenBlock = (player, block) => {
+  let playerHeadCoordinates = player.get('coordinates').valueSeq().last();
+  let blockCoordinates = block.get('coordinates').valueSeq().last();
+  return playerHeadCoordinates.equals(blockCoordinates);
+};
+export { eatenBlock };
+
+let fillGrid = (players, timer, block, grid) => {
+  let time = timer.get('time');
+  let newGridWithPlayers = players
+    .reduce((newGridByPlayer, player) => getPlayerCoordinates(player)
+      .reduce((newGridByBlock, coordinates, index) => newGridByBlock.setIn([
+          coordinates.get('rowId'), 
+          coordinates.get('columnId'),
+          'content'
+        ],
+        fromJS({
+          type: 'player',
+          id: player.get('id'),
+          isHead: index === 0 
+        })
+      ), newGridByPlayer), grid.get(-1)
+    );
+    
+  let newGridWithBlock = newGridWithPlayers.setIn([
+      block.getIn([
+        'coordinates',
+        time,
+        'rowId'
+      ]),
+      block.getIn([
+        'coordinates',
+        time,
+        'columnId'
+      ]),
+      'content'
+    ],
+    fromJS({
+      type: 'block'
+    })
+  );
+  
+  return newGridWithBlock;
+};
+export { fillGrid };
 
 export const JOIN_GAME = 'JOIN_GAME';
 export function joinGame(players, grid, block, timer) {
@@ -68,86 +155,6 @@ export const CHANGE_DIRECTION = 'CHANGE_DIRECTION';
 export function changeDirection(playerId, direction) {
   return { type: CHANGE_DIRECTION, playerId, direction };
 }
-
-let movePlayer = (player, timer) => {
-  let time = timer.get('time');
-  let previousCoordinates = player.getIn(['coordinates', time - 1]);
-  
-  switch (player.get('direction')) {
-    case 'up': 
-      return player.setIn(['coordinates', time], previousCoordinates
-        .update('rowId', rowIndex => rowIndex - 1));
-    case 'down': 
-      return player.setIn(['coordinates', time], previousCoordinates
-        .update('rowId', rowIndex => rowIndex + 1));
-    case 'left': 
-      return player.setIn(['coordinates', time], previousCoordinates
-        .update('columnId', columnIndex => columnIndex - 1));
-    case 'right': 
-      return player.setIn(['coordinates', time], previousCoordinates
-        .update('columnId', columnIndex => columnIndex + 1));
-    default:
-      return player;
-  }
-};
-
-let fillGrid = (players, timer, block, grid) => {
-  let time = timer.get('time');
-  let newGridWithPlayers = players
-    .reduce((newGridByPlayer, player) => getPlayerCoordinates(player)
-      .reduce((newGridByBlock, coordinates, index) => newGridByBlock.setIn([
-          coordinates.get('rowId'), 
-          coordinates.get('columnId'),
-          'content'
-        ],
-        fromJS({
-          type: 'player',
-          id: player.get('id'),
-          isHead: index === 0 
-        })
-      ), newGridByPlayer), grid.get(-1)
-    );
-    
-  let newGridWithBlock = newGridWithPlayers.setIn([
-      block.getIn([
-        'coordinates',
-        time,
-        'rowId'
-      ]),
-      block.getIn([
-        'coordinates',
-        time,
-        'columnId'
-      ]),
-      'content'
-    ],
-    fromJS({
-      type: 'block'
-    })
-  );
-  
-  return newGridWithBlock;
-};
-
-let isOutOfBounds = player => {
-  let headCoordinates = player.get('coordinates').valueSeq().last();
-  return headCoordinates.get('rowId') < 0 || headCoordinates.get('rowId') > 7 ||
-    headCoordinates.get('columnId') < 0 || headCoordinates.get('columnId') > 7;
-};
-
-let hasCollided = player => {
-  // TODO: update collision logic for multiplayer
-  let playerCoordinates = getPlayerCoordinates(player);
-  let playerHeadCoordinates = playerCoordinates.first();
-  let playerBodyCoordinates = playerCoordinates.rest();
-  return playerBodyCoordinates.includes(playerHeadCoordinates);
-};
-
-let eatenBlock = (player, block) => {
-  let playerHeadCoordinates = player.get('coordinates').valueSeq().last();
-  let blockCoordinates = block.get('coordinates').valueSeq().last();
-  return playerHeadCoordinates.equals(blockCoordinates);
-};
 
 export const STOP_GAME = 'STOP_GAME';
 
