@@ -42,7 +42,9 @@ class GameBoard extends Component {
       <div style={({
         display: 'flex',
         justifyContent: 'center',
-        width: '100%'
+        width: '100%',
+        lineHeight: '0',
+        fontSize: '0px'
       })}>
         <div style={({
           width: '70vmin',
@@ -55,9 +57,7 @@ class GameBoard extends Component {
                 key={rowId}
                 style={({
                   height: `${ 100 / currentGrid.size }%`,
-                  boxSizing: 'border-box',
-                  borderBottom: rowId !== currentGrid.size - 1 ? 
-                    '1px solid #bbb' : 'none'
+                  boxSizing: 'border-box'
                 })}
               >
                 {
@@ -70,8 +70,7 @@ class GameBoard extends Component {
                         margin: '0',
                         height: '100%',
                         width: `${ 100 / row.size }%`,
-                        borderRight: columnId !== row.size - 1 ?
-                          '1px solid #bbb' : 'none'
+                        border: '1px solid #bbb'
                       })}
                     >
                       <div style={({

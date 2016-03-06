@@ -7,10 +7,10 @@ import {
 
 let initialState = OrderedMap([[
   -1, OrderedMap(
-    Range(0, 8).map(rowId => [
+    Range(0, 50).map(rowId => [
       rowId,
       OrderedMap(
-        Range(0, 8).map(columnId => [
+        Range(0, 50).map(columnId => [
           columnId,
           fromJS({ 
             coordinates: { rowId, columnId },

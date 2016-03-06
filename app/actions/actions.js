@@ -7,8 +7,8 @@ let getRandomInt = (min, max) => {
 
 let getNewCoordinates = (existingCoordinates, getInt = getRandomInt) => {  
   let newCoordinates = fromJS({
-    rowId: getInt(0, 8),
-    columnId: getInt(0, 8)
+    rowId: getInt(0, 49),
+    columnId: getInt(0, 49)
   });
   
   if (!existingCoordinates.includes(newCoordinates)) {
@@ -50,8 +50,8 @@ export { movePlayer };
 
 let isOutOfBounds = player => {
   let headCoordinates = player.get('coordinates').valueSeq().last();
-  return headCoordinates.get('rowId') < 0 || headCoordinates.get('rowId') > 7 ||
-    headCoordinates.get('columnId') < 0 || headCoordinates.get('columnId') > 7;
+  return headCoordinates.get('rowId') < 0 || headCoordinates.get('rowId') > 49 ||
+    headCoordinates.get('columnId') < 0 || headCoordinates.get('columnId') > 49;
 };
 export { isOutOfBounds };
 
