@@ -129,7 +129,7 @@ export function joinGame(players, grid, block, timer) {
   
   let randomBlock = getNewCoordinates(getPlayerCoordinates(newPlayer));
   
-  let newBlock = block.setIn(['coordinates', time], randomBlock);
+  let newBlock = block.set('coordinates', OrderedMap([[time, randomBlock]]));
   
   // TODO: game-over logic needs to be updated for multiplayer
   let filledGrid = fillGrid(newPlayers, updatedTimer, newBlock, grid);
