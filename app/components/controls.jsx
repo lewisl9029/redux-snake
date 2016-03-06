@@ -1,6 +1,53 @@
 import React, { Component } from 'react';
+import shouldPureComponentUpdate from 'react-pure-render/function';
 
 class Controls extends Component {
+  shouldComponentUpdate = shouldPureComponentUpdate;
+  
+  componentWillMount() {
+    let { 
+      timer, 
+      grid,
+      block,
+      players, 
+      playerId, 
+      joinGame, 
+      startGame, 
+      startTimer, 
+      changeDirection 
+    } = this.props;
+    document.addEventListener('keyup', event => {
+      switch (event.code) {
+        case 'ArrowUp':
+          let upButton = document.getElementById('up');
+          if (upButton && !upButton.disabled) {
+            upButton.click();
+          }
+          return;
+        case 'ArrowDown':
+          let downButton = document.getElementById('down');
+          if (downButton && !downButton.disabled) {
+            downButton.click();
+          }
+          return;
+        case 'ArrowLeft':
+          let leftButton = document.getElementById('left');
+          if (leftButton && !leftButton.disabled) {
+            leftButton.click();
+          }
+          return;
+        case 'ArrowRight':
+          let rightButton = document.getElementById('right');
+          if (rightButton && !rightButton.disabled) {
+            rightButton.click();
+          }
+          return;
+        default:
+          return;
+      }
+    });
+  }
+
   render() {
     let { 
       timer, 
@@ -31,70 +78,10 @@ class Controls extends Component {
       (
         <div>
         <div className="row">
-          <input type="text" onKeyUp={event => {
-              switch (event.key) {
-                case 'ArrowUp':
-                  if (timer.get('time') === 0) {
-                    startGame(playerId, 'up'); 
-                    startTimer();
-                    return;
-                  }
-                  return changeDirection(playerId, 'up');
-                case 'ArrowDown':
-                  if (timer.get('time') === 0) {
-                    startGame(playerId, 'down'); 
-                    startTimer();
-                    return;
-                  }
-                  return changeDirection(playerId, 'down');
-                case 'ArrowLeft':
-                  if (timer.get('time') === 0) {
-                    startGame(playerId, 'left'); 
-                    startTimer();
-                    return;
-                  }
-                  return changeDirection(playerId, 'left');
-                case 'ArrowRight':
-                  if (timer.get('time') === 0) {
-                    startGame(playerId, 'right'); 
-                    startTimer();
-                    return;
-                  }
-                  return changeDirection(playerId, 'right');
-                default:
-                  return;
-              }
-            }} />
-        </div>
-        <div className="row">
-          <div className="three columns">
+          <div className="offset-by-four four columns">
             <button 
               type="button" 
-              className={
-                players.getIn([playerId, 'direction']) === 'left' ? 
-                  'u-full-width button-primary' : 'u-full-width'
-              }
-              onClick={
-                () => {
-                  if (timer.get('time') === 0) {
-                    startGame(playerId, 'left'); 
-                    startTimer();
-                    return;
-                  }
-                  changeDirection(playerId, 'left');
-                }
-              }
-              disabled={
-                players.getIn([playerId, 'direction']) === 'left' || 
-                players.getIn([playerId, 'direction']) === 'right'
-              }
-            >
-              Left
-            </button>
-          </div>
-          <div className="three columns">
-            <button 
-              type="button" 
+              id="up"
               className={
                 players.getIn([playerId, 'direction']) === 'up' ? 
                   'u-full-width button-primary' : 'u-full-width'
@@ -117,34 +104,38 @@ class Controls extends Component {
               Up
             </button>
           </div>
-          <div className="three columns">
+        </div>
+        <div className="row">
+          <div className="offset-by-two four columns">
             <button 
               type="button" 
+              id="left"
               className={
-                players.getIn([playerId, 'direction']) === 'down' ? 
+                players.getIn([playerId, 'direction']) === 'left' ? 
                   'u-full-width button-primary' : 'u-full-width'
               }
               onClick={
                 () => {
                   if (timer.get('time') === 0) {
-                    startGame(playerId, 'down'); 
+                    startGame(playerId, 'left'); 
                     startTimer();
                     return;
                   }
-                  changeDirection(playerId, 'down');
+                  changeDirection(playerId, 'left');
                 }
               }
               disabled={
-                players.getIn([playerId, 'direction']) === 'down' || 
-                players.getIn([playerId, 'direction']) === 'up'
+                players.getIn([playerId, 'direction']) === 'left' || 
+                players.getIn([playerId, 'direction']) === 'right'
               }
             >
-              Down
+              Left
             </button>
           </div>
-          <div className="three columns">
+          <div className="four columns">
             <button 
               type="button" 
+              id="right"
               className={
                 players.getIn([playerId, 'direction']) === 'right' ? 
                   'u-full-width button-primary' : 'u-full-width'
@@ -168,7 +159,34 @@ class Controls extends Component {
             </button>
           </div>
         </div>
-        
+        <div className="row">
+          <div className="offset-by-four four columns">
+            <button 
+              type="button" 
+              id="down"
+              className={
+                players.getIn([playerId, 'direction']) === 'down' ? 
+                  'u-full-width button-primary' : 'u-full-width'
+              }
+              onClick={
+                () => {
+                  if (timer.get('time') === 0) {
+                    startGame(playerId, 'down'); 
+                    startTimer();
+                    return;
+                  }
+                  changeDirection(playerId, 'down');
+                }
+              }
+              disabled={
+                players.getIn([playerId, 'direction']) === 'down' || 
+                players.getIn([playerId, 'direction']) === 'up'
+              }
+            >
+              Down
+            </button>
+          </div>
+        </div>
         </div>
       );
   }

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Range } from 'immutable';
+import shouldPureComponentUpdate from 'react-pure-render/function';
 
 class GameBoard extends Component {
+  shouldComponentUpdate = shouldPureComponentUpdate;
   render() {
     let { grid, players, playerId, timer } = this.props;
     

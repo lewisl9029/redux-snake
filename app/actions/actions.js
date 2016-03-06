@@ -7,8 +7,8 @@ let getRandomInt = (min, max) => {
 
 let getNewCoordinates = (existingCoordinates, getInt = getRandomInt) => {  
   let newCoordinates = fromJS({
-    rowId: getInt(0, 49),
-    columnId: getInt(0, 49)
+    rowId: getInt(0, 7),
+    columnId: getInt(0, 7)
   });
   
   if (!existingCoordinates.includes(newCoordinates)) {
@@ -50,8 +50,8 @@ export { movePlayer };
 
 let isOutOfBounds = player => {
   let headCoordinates = player.get('coordinates').valueSeq().last();
-  return headCoordinates.get('rowId') < 0 || headCoordinates.get('rowId') > 49 ||
-    headCoordinates.get('columnId') < 0 || headCoordinates.get('columnId') > 49;
+  return headCoordinates.get('rowId') < 0 || headCoordinates.get('rowId') > 7 ||
+    headCoordinates.get('columnId') < 0 || headCoordinates.get('columnId') > 7;
 };
 export { isOutOfBounds };
 
@@ -226,7 +226,7 @@ export function startTimer() {
       
       clearInterval(intervalId);
       dispatch({ type: TIMER_STOP });
-    }, 200);
+    }, 500);
     dispatch({ type: TIMER_START });
   };
 }
