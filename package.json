@@ -1,5 +1,5 @@
 {
-  "name": "Redux Snake",
+  "name": "redux-snake",
   "version": "0.0.1",
   "description": "Snake game built in Redux",
   "main": "dev-server.js",
