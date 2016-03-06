@@ -77,8 +77,8 @@ class Controls extends Component {
       ) :
       (
         <div>
-        <div className="row">
-          <div className="offset-by-four four columns">
+        <div className="controls-container">
+          <div className="control-container">
             <button 
               type="button" 
               id="up"
@@ -105,8 +105,8 @@ class Controls extends Component {
             </button>
           </div>
         </div>
-        <div className="row">
-          <div className="offset-by-two four columns">
+        <div className="controls-container">
+          <div className="control-container">
             <button 
               type="button" 
               id="left"
@@ -132,7 +132,7 @@ class Controls extends Component {
               Left
             </button>
           </div>
-          <div className="four columns">
+          <div className="control-container">
             <button 
               type="button" 
               id="right"
@@ -159,8 +159,8 @@ class Controls extends Component {
             </button>
           </div>
         </div>
-        <div className="row">
-          <div className="offset-by-four four columns">
+        <div className="controls-container">
+          <div className="control-container">
             <button 
               type="button" 
               id="down"

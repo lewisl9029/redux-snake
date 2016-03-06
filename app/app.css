@@ -4,6 +4,17 @@ button:disabled {
   opacity: 0.5;
 }
 
+.controls-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.control-container {
+  flex: 0 1 40%;
+}
+
 #ribbon-container {
   pointer-events: none;
   position: absolute;
