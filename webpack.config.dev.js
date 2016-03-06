@@ -34,7 +34,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new HtmlWebpackPlugin({
-      title: 'Snake Swarm',
+      title: 'Redux Snake',
       template: './app/app.html'
     }),
     new ExtractTextPlugin("[name].css")

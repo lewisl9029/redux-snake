@@ -12,7 +12,7 @@ import Controls from '../components/controls';
 // 	<div className="container" style={({
 // 		marginTop: '1em'
 // 	})}>
-// 		<h1>Snake Swarm</h1>
+// 		<h1>Redux Snake</h1>
     
 // 	</div>
 // );
@@ -34,7 +34,7 @@ class App extends Component {
         <h1 style={({
           textAlign: 'center'
         })}>
-          Snake Swarm
+          Redux Snake
         </h1>
         <Controls
           players={players} 

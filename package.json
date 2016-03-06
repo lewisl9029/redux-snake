@@ -1,7 +1,7 @@
 {
-  "name": "snake-swarm",
+  "name": "Redux Snake",
   "version": "0.0.1",
-  "description": "Decentralized multiplayer snake game built with Redux and Swarm",
+  "description": "Snake game built in Redux",
   "main": "dev-server.js",
   "scripts": {
     "build": "node_modules/.bin/webpack --config webpack.config.prod.js",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lewisl9029/snake-swarm.git"
+    "url": "git+https://github.com/lewisl9029/redux-snake.git"
   },
   "author": "Lewis Liu",
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/lewisl9029/snake-swarm/issues"
+    "url": "https://github.com/lewisl9029/redux-snake/issues"
   },
-  "homepage": "https://github.com/lewisl9029/snake-swarm#readme",
+  "homepage": "https://github.com/lewisl9029/redux-snake#readme",
   "dependencies": {
     "babel-polyfill": "^6.3.14",
     "immutable": "^3.7.6",

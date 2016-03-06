@@ -1,2 +1,2 @@
-# snakes
-Multiplayer snakes game built with Redux
+# Redux Snake
+Snake game built in Redux
