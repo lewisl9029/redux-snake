@@ -4,8 +4,8 @@ import {
 	JOIN_GAME,
   START_GAME,
   TIMER_TICK,
-  CHANGE_DIRECTION,
-  UNLOCK_DIRECTION
+  TIMER_STOP,
+  CHANGE_DIRECTION
 } from '../actions/actions';
 
 let initialState = Map({
@@ -32,6 +32,8 @@ let players = (state = initialState, action) => {
         .setIn([action.playerId, 'direction'], action.direction);   
     case TIMER_TICK:
       return action.players.map(player => player.set('directionLocked', false));
+    case TIMER_STOP:
+      return state.map(player => player.set('directionLocked', true));
 		default:
 			return state;
 	}
