@@ -4,9 +4,9 @@
   "description": "Snake game built in Redux",
   "main": "dev-server.js",
   "scripts": {
-    "build": "node_modules/.bin/webpack --config webpack.config.prod.js",
+    "build": "set NODE_ENV=production&&webpack --config webpack.config.prod.js",
     "start": "node dev-server.js",
-    "test": "node_modules/.bin/mocha --reporter spec --compilers js:babel-core/register app/**/*.test.js",
+    "test": "mocha --reporter spec --compilers js:babel-core/register app/**/*.test.js",
     "test:watch": "npm test -- --watch"
   },
   "repository": {
